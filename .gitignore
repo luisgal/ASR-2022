@@ -1,0 +1,16 @@
+
+.idea/
+
+Prac_1/__pycache__/
+
+Prac_1/bd/*.rrd
+
+Prac_1/bd/*.xml
+
+Prac_1/graph/*.png
+
+Prac_1/menu/__pycache__/
+
+Prac_1/report/__pycache__/
+
+Prac_1/snmp/__pycache__/
