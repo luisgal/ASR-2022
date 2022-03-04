@@ -4,6 +4,10 @@ from Prac_1.snmp.CreateRRD import create
 from Prac_1.snmp.getSNMP import consultaSNMP
 
 def inicio(filename):
+    file_data = {
+        "dispositivos": []
+    }
+
     with open(filename, 'r+') as file:
         file_data = json.load(file)
         dispositivos = file_data["dispositivos"]
@@ -34,5 +38,5 @@ def inicio(filename):
                 if(not os.path.exists('./bd/'+dispositivo["name"]+'.rrd')):
                     create(dispositivo["name"])
 
-        file.seek(0)
+    with open(filename, 'w') as file:
         json.dump(file_data, file, indent=4)

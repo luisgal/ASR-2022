@@ -1,4 +1,5 @@
 import os
+import os.path
 import json
 from Prac_1.snmp.CreateRRD import create
 
@@ -20,13 +21,19 @@ def alta(filename):
     print('\tPuerto de consulta snmp: ', end='')
     port = input()
 
+    print('\tNumero de interfaz de red, dada en snmp, a monitorear: (NOTA: la interfaz por default es 1)', end='')
+    interfaz = input()
+    if interfaz == '':
+        interfaz = '1'
+
     newDispositivo = {
         "name": name,
         "ipAddress": ipAddress,
         "version": version,
         "community": community,
         "port": port,
-        "conexion": False
+        "interface" : interfaz,
+        "conexion": "False"
     }
 
     with open(filename, 'r+') as file:
@@ -43,25 +50,30 @@ def baja(filename):
     print('Eliminar un dispositivo, inserta hostName o iPAdress: ', end='')
     host = input()
 
-    file_data = {}
+    file_data = {
+        "dispositivos": []
+    }
+
     remove = False
-    with open(filename, 'r+') as file:
+    with open(filename, 'r') as file:
         file_data = json.load(file)
         dispositivos = file_data["dispositivos"]
 
         index = 0
         for dispositivo in dispositivos:
-            if (host == dispositivo["ipAddress"]):
-                os.remove('./bd/' + dispositivo["name"] + ".rrd")
-                os.remove('./bd/' + dispositivo["name"] + ".xml")
+            if host == dispositivo["ipAddress"]:
+                if os.path.exists('./bd/' + dispositivo["name"] + ".rrd"):
+                    os.remove('./bd/' + dispositivo["name"] + ".rrd")
+                if os.path.exists('./bd/' + dispositivo["name"] + ".xml"):
+                    os.remove('./bd/' + dispositivo["name"] + ".xml")
                 break
             index += 1
 
-        if (index < len(dispositivos)):
+        if index < len(dispositivos):
             dispositivos.pop(index)
             remove = True
 
-    if (file_data and remove):
+    if file_data and remove:
         with open(filename, 'w') as file:
             json.dump(file_data, file, indent=4)
 

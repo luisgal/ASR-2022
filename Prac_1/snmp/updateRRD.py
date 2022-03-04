@@ -1,13 +1,11 @@
 import os.path
 import rrdtool
 import json
+import time
 from Prac_1.snmp.getSNMP import consultaSNMP
 
 def updateDisp(disp):
-    if(disp["name"]=='windows'):
-        ifInNUcastPkts = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.2.2.1.12.11')) #Wirless
-    else:
-        ifInNUcastPkts = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.2.2.1.12.2')) #Wireless
+    ifInNUcastPkts = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.2.2.1.12.'+disp["interface"]))
     ipInDelivers = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.4.9.0'))
     icmpOutEchoReps = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.5.22.0'))
     tcpOutSegs = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.6.11.0'))
@@ -21,6 +19,7 @@ def updateDisp(disp):
 
 def update(filename):
     while 1:
+        time.sleep(2)
         with open(filename, 'r') as file:
             file_data = json.load(file)
             for disp in file_data["dispositivos"]:

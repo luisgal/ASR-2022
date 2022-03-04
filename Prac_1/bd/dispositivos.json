@@ -1,28 +1,22 @@
 {
     "dispositivos": [
         {
-            "name": "ubuntu",
+            "name": "windows",
             "ipAddress": "192.168.100.60",
             "version": "v1",
             "community": "comunidadSNMP",
             "port": "161",
+            "interface": "11",
             "conexion": "True"
         },
         {
-            "name": "ubuntu1",
+            "name": "ubuntu_local",
             "ipAddress": "localhost",
             "version": "v2c",
             "community": "comunidadSNMP",
             "port": "161",
+            "interface": "3",
             "conexion": "True"
-        },
-        {
-            "name": "ivan",
-            "ipAddress": "192.168.100.57",
-            "version": "v1",
-            "community": "comunidadASR",
-            "port": "161",
-            "conexion": "False"
         }
     ]
 }

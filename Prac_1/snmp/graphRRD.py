@@ -1,14 +1,22 @@
+import os
 import rrdtool
 import time
+
 tiempo_actual = int(time.time())
 
-#Grafica desde el tiempo actual menos diez minutos
+# Grafica desde el tiempo actual menos diez minutos
 tiempo_inicial = tiempo_actual - 600
 
-def graph(title,name,dispName,describe):
-    ret = rrdtool.graph( "./graph/"+name+dispName+".png",
-                         "--start",str(tiempo_inicial),
-                         "--end","N",
-                         "--title="+title,
-                         "DEF:"+name+"="+'./bd/'+dispName+".rrd:"+name+":AVERAGE",
-                         "LINE3:"+name+"#0000FF:"+describe)
+
+def graph(title, name, dispName, describe):
+    try:
+        os.mkdir("./graph")
+    except OSError as error:
+        pass
+
+    ret = rrdtool.graph("./graph/" + name + dispName + ".png",
+                        "--start", str(tiempo_inicial),
+                        "--end", "N",
+                        "--title=" + title,
+                        "DEF:" + name + "=" + './bd/' + dispName + ".rrd:" + name + ":AVERAGE",
+                        "LINE3:" + name + "#0000FF:" + describe)
