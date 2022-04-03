@@ -1,18 +1,18 @@
 
 .idea/
 
-Prac_1/__pycache__/
+Prac_*/__pycache__/
 
-Prac_1/bd/*.rrd
+Prac_*/bd/*.rrd
 
-Prac_1/bd/*.xml
+Prac_*/bd/*.xml
 
-Prac_1/graph/*.png
+Prac_*/graph/*.png
 
-Prac_1/menu/__pycache__/
+Prac_*/menu/__pycache__/
 
-Prac_1/report/__pycache__/
+Prac_*/report/__pycache__/
 
-Prac_1/snmp/__pycache__/
+Prac_*/snmp/__pycache__/
 
-Prac_1/report/*.pdf
+Prac_*/report/*.pdf
