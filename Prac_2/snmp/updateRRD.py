@@ -2,16 +2,13 @@ import os.path
 import rrdtool
 import json
 import time
-from Prac_1.snmp.getSNMP import consultaSNMP
+from Prac_2.snmp.getSNMP import consultaSNMP
 
 def updateDisp(disp):
-    ifInNUcastPkts = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.2.2.1.12.'+disp["interface"]))
-    ipInDelivers = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.4.9.0'))
-    icmpOutEchoReps = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.5.22.0'))
+    tcpInSegs = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.6.10.0'))
     tcpOutSegs = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.6.11.0'))
-    udpInErrors = int(consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.7.3.0'))
 
-    valor = "N:"+str(ifInNUcastPkts)+':'+str(ipInDelivers)+':'+str(icmpOutEchoReps)+':'+str(tcpOutSegs)+':'+str(udpInErrors)
+    valor = "N:"+str(tcpInSegs)+':'+str(tcpOutSegs)
 
     if(os.path.exists('./bd/'+disp["name"]+".rrd")):
         rrdtool.update('./bd/'+disp["name"]+".rrd", valor)

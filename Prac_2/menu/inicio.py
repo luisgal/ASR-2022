@@ -1,7 +1,7 @@
 import os.path
 import json
-from Prac_1.snmp.CreateRRD import create
-from Prac_1.snmp.getSNMP import consultaSNMP
+from Prac_2.snmp.CreateRRD import create
+from Prac_2.snmp.getSNMP import consultaSNMP
 
 def inicio(filename):
     file_data = {

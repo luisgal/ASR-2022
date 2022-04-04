@@ -1,7 +1,7 @@
 import os
 import time
-from Prac_1.menu.menu import menu
-from Prac_1.snmp.updateRRD import update
+from Prac_2.menu.menu import menu
+from Prac_2.snmp.updateRRD import update
 
 filename = "./bd/dispositivos.json"
 

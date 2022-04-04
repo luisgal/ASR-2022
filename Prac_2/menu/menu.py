@@ -1,6 +1,6 @@
-from Prac_1.menu.inicio import inicio
-from Prac_1.menu.manejoDispositivos import *
-from Prac_1.report.reporte import crearReport
+from Prac_2.menu.inicio import inicio
+from Prac_2.menu.manejoDispositivos import *
+from Prac_2.report.reporte import crearReport
 
 def menu(filename):
     inicio(filename)

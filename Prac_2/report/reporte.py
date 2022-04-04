@@ -1,8 +1,8 @@
 import json
-from Prac_1.snmp.graphRRD import graph
-from Prac_1.snmp.getSNMP import consultaSNMP
+from Prac_2.snmp.getSNMP import consultaSNMP
 from reportlab.pdfgen import canvas
 from datetime import timedelta
+from Prac_2.snmp.fetch import fetch_rrd
 
 def mostrarDispositivos(filename):
     with open(filename, 'r+') as file:
@@ -16,29 +16,6 @@ def mostrarDispositivos(filename):
 
         return file_data["dispositivos"]
 
-def crearGraphs(name):
-    graph('Paquetes multicast que ha \nrecibido la interfaz Wireless',
-          'ifInNUcastPkts',
-          name,
-          'Numero de paquetes')
-    graph('Paquetes recibidos exitosamente, \nentregados a protocolos IPv4',
-          'ipInDelivers',
-          name,
-          'Numero de paquetes')
-    graph('Mensajes de respuesta ICMP \nque ha enviado el agente',
-          'icmpOutEchoReps',
-          name,
-          'Numero de mesajes')
-    graph('Segmentos enviados incluyendo \nlos de las conexiones actuales \npero excluyendo los que contienen \nsolamente octetos retrasnmitidos',
-          'tcpOutSegs',
-          name,
-          'Numero de segmentos')
-    graph('Datagramas recibidos que no \npudieron ser netregados por \ncuestiones distintas a la falta \nde aplicacion en el puerto destino',
-          'udpInErrors',
-          name,
-          'Numero de datagramas')
-
-
 def crearReport(filename):
     dispositivos = mostrarDispositivos(filename)
     print("Elige el dispositivo del cual deseas generar su reporte: ", end='')
@@ -47,7 +24,15 @@ def crearReport(filename):
 
     name = disp["name"]
 
-    crearGraphs(name)
+    print("Ingresa la fecha de inicio y final que deseas mostrar en el reporte, sigue el formato del ejemplo.")
+    print("Ejemplo de fecha: 2022-03-01 12:30:56")
+
+    print("Fecha inicial: ", end='')
+    fecha_I = input()
+    print("Fecha final: ", end='')
+    fecha_F = input()
+
+    result = fetch_rrd(fecha_I,fecha_F,name)
 
     #generar PDF
     c = canvas.Canvas("./report/ReporteDisp"+name+".pdf")
@@ -60,7 +45,6 @@ def crearReport(filename):
     ubi = consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.1.6.0')
     tiempo = consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.1.3.0')
     dateT = consultaSNMP(disp["community"], disp["ipAddress"], '1.3.6.1.2.1.25.1.2.0')
-    comunidad = disp["community"]
     ip = disp["ipAddress"]
 
     if(tiempo != ''):
@@ -89,14 +73,28 @@ def crearReport(filename):
     c.drawString(25, 750, "Ubicacion: " + ubi)
     c.drawString(25, 735, "Tiempo en actividad: " + str(tiempo))
     c.drawString(25, 720, "Hora del dispositivo: " + dateT_)
-    c.drawString(25, 705, "Comunidad: " + comunidad)
-    c.drawString(25, 690, "Host/IP: " + ip)
+    c.drawString(25, 705, "Host/IP: " + ip)
 
-    c.drawImage("./graph/ifInNUcastPkts" + name + ".png",25,540,265,125)
-    c.drawImage("./graph/ipInDelivers" + name + ".png", 300, 540,265,125)
-    c.drawImage("./graph/icmpOutEchoReps" + name + ".png", 25, 350,265,125)
-    c.drawImage("./graph/tcpOutSegs" + name + ".png", 300, 350,265,125)
-    c.drawImage("./graph/udpInErrors" + name + ".png", 25, 160,265,125)
+    inicio_In = str(result[2][0][0])
+    inicio_Out = str(result[2][-1][0])
+    final_In = str(result[2][0][1])
+    final_Out = str(result[2][-1][1])
+
+    if (inicio_In == "None"):
+        inicio_In = 0
+    if (inicio_Out == "None"):
+        inicio_Out = 0
+    if (final_In == "None"):
+        final_In = 0
+    if (final_Out == "None"):
+        final_Out = 0
+
+    segs_In = int(final_In) - int(inicio_In)
+    segs_Out = int(final_Out) - int(inicio_Out)
+
+
+    c.drawString(25, 690, "TCP In Segments: " + str(segs_In))
+    c.drawString(25, 675, "TCP In Segments: " + str(segs_Out))
 
     c.save()
 

@@ -1,7 +1,7 @@
 import os
 import os.path
 import json
-from Prac_1.snmp.CreateRRD import create
+from Prac_2.snmp.CreateRRD import create
 
 def alta(filename):
     print('Para agregar un nuevo dispostivo se requieren los siguientes datos.')
